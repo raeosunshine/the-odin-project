@@ -86,4 +86,13 @@ function playGame() {
 	getWinner(humanScore, computerScore);
 }
 
-playGame();
+const input = confirm(`
+	Welcome to Odin Rock, Paper, and Scissors!
+	Let's play 5-round game, shall we?
+`);
+
+if(input) {
+	playGame();
+} else {
+	alert("That's unfortunate. Hope to play with you some other time!")
+}
