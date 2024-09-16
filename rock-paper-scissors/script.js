@@ -15,7 +15,11 @@ function getComputerChoice() {
 }
 
 function getHumanChoice() {
-	const input = prompt("Enter your signal: rock, paper, or scissors.");
+	const input = prompt(`
+		Disclaimer: A typo could lead to your defeat. Please enter your choice carefully.
+
+		REMEMBER: Rock, Paper, or Scissors!
+	`) || ""; // set to empty string if it's null
 	const choice = input.toLowerCase(); // to handle case sensitivity
 
 	return choice;
@@ -41,17 +45,21 @@ function getWinner(humanScore, computerScore) {
 	return alert("Sorry, you lose.")
 }
 
+function isValidChoice(choice) {
+	return choice === "paper" || choice === "rock" || choice === "scissors";
+}
+
 
 function playGame() {
 	let humanScore = 0;
 	let computerScore = 0;
 	let round = 0;
 
-	function resultAlert(humanChoice, computerChoice, message) {
+	function roundResultAlert(humanChoice, computerChoice, message) {
 		alert(`
 			Round ${round + 1}
 
-			You: ${capitalize(humanChoice)} | Computer: ${capitalize(computerChoice)}
+			You: ${capitalize(humanChoice || "-")} | Computer: ${capitalize(computerChoice)}
 			${message}
 
 			You: ${humanScore} | Computer: ${computerScore}
@@ -61,28 +69,30 @@ function playGame() {
 	function playRound(humanChoice, computerChoice) {
 		if (isWinning(humanChoice, computerChoice)) {
 			humanScore += 1;
-			resultAlert(
+			roundResultAlert(
 				humanChoice,
 				computerChoice,
 				`You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}`
 			);
-		} else if (isWinning(computerChoice, humanChoice)) {
+		} else if (isWinning(computerChoice, humanChoice) || !isValidChoice(humanChoice)) {
 			computerScore += 1;
-			resultAlert(
+			roundResultAlert(
 				humanChoice,
 				computerChoice,
-				`You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice)}`
+				`You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice || "-")}`
 			);
 		} else {
-			resultAlert(humanChoice, computerChoice, "It's a draw!");
+			roundResultAlert(humanChoice, computerChoice, "It's a draw!");
 		}
 	}
 
+	// Play the game 5 rounds
 	while(round < 5) {
 		playRound(getHumanChoice(), getComputerChoice());
 		round += 1;
 	}
 
+	// Announce the winner
 	getWinner(humanScore, computerScore);
 }
 
