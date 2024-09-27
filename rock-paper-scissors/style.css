@@ -1,0 +1,185 @@
+*,
+*::before,
+*::after {
+	margin: 0;
+	box-sizing: border-box;
+}
+
+* {
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	padding: 16px;
+	min-height: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#root {
+	width: 100%;
+	max-width: 500px;
+}
+
+#info h1,
+#info p {
+	text-align: right;
+}
+
+#info sup {
+	cursor: default;
+	color: red;
+}
+
+#info p>span {
+	font-weight: 700;
+}
+
+#board {
+	min-height: 500px;
+
+	border: 3px solid black;
+	margin-bottom: 12px;
+	padding: 12px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+#round-counter {
+	background-color: black;
+	color: white;
+	padding: 8px;
+	width: fit-content;
+	text-align: center;
+	align-self: flex-end;
+}
+
+#round-counter h3 {
+	font-size: 14px;
+	font-weight: 400;
+
+	margin-top: 4px;
+}
+
+#round-counter p {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+#players,
+#match {
+	list-style: none;
+	padding: 0;
+
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+#players li {
+	width: 100px;
+	text-align: center;
+}
+
+#players li:nth-child(2) {
+	flex-grow: 1;
+	align-self: center;
+}
+
+#players .score {
+	font-size: 36px;
+	font-weight: 700;
+}
+
+#console {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+}
+
+#console button {
+	font-size: 32px;
+	cursor: pointer;
+
+	background-color: cornflowerblue;
+	border: 1px solid cornflowerblue;
+	border-radius: 12px;
+
+	width: 60px;
+	height: 60px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#console button:hover {
+	background-color: hsl(219, 99%, 58%);
+}
+
+#match {
+	padding: 16px;
+}
+
+#match li {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+#match li:nth-child(2) {
+	flex-grow: 1;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#match .player {
+	width: 150px;
+	height: 150px;
+
+	display: flex;
+	flex-direction: column;
+
+	border: 3px solid black;
+}
+
+#match .player-label {
+	margin-top: -3px;
+	margin-left: -3px;
+	padding: 4px 8px;
+
+	width: fit-content;
+	border: 3px solid black;
+
+	font-size: 12px;
+}
+
+#match .score-label {
+	border: 3px solid black;
+	padding: 4px 12px;
+	text-align: center;
+}
+
+#match .score-label > span {
+	font-weight: 700;
+}
+
+#bot-pick,
+#user-pick {
+	font-size: 72px;
+
+	flex: 1 1 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

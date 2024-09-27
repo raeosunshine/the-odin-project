@@ -3,10 +3,53 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Odin Rock Paper Scissors</title>
+	<link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
+	<div id="root">
+		<div id="board">
+			<div id="round-counter">
+				<p><span id="round-count"></span>/<span>5</span></p>
+				<h3>round</h3>
+			</div>
+			<ul id="match">
+				<li>
+					<div class="player">
+						<p class="player-label">SaBot🤖</p>
+						<p id="bot-pick"></p>
+					</div>
+					<p class="score-label">
+						<span id="bot-score"></span> wins
+					</p>
+				</li>
+				<li>
+					<p id="round-state"></p>
+				</li>
+				<li>
+					<div class="player">
+						<p class="player-label">You🤠</p>
+						<p id="user-pick"></p>
+					</div>
+					<p class="score-label">
+						<span id="user-score"></span> wins
+					</p>
+				</li>
+			</ul>
+
+			<div id="console">
+				<button title="rock">✊</button>
+				<button title="paper">🖐️</button>
+				<button title="scissors">✌️</button>
+			</div>
+		</div>
+		<div id="info">
+			<p>can you beat <span>SaBot🤖<sup title="Super intelligent AI Bot">*</sup></span> in this game?</p>
+			<h1>rock paper scissors</h1>
+		</div>
+	</div>
 	<script src="./script.js"></script>
 </body>
 
