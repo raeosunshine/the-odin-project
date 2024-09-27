@@ -1,16 +1,3 @@
-
-
-// function getHumanChoice() {
-// 	const input = prompt(`
-// 		Disclaimer: A typo could lead to your defeat. Please enter your choice carefully.
-
-// 		REMEMBER: Rock, Paper, or Scissors!
-// 	`) || ""; // set to empty string if it's null
-// 	const choice = input.toLowerCase(); // to handle case sensitivity
-
-// 	return choice;
-// }
-
 // function isWinning(first, second) {
 // 	return first === "paper" && second === "rock" || first === "rock" && second === "scissors" || first === "scissors" && second === "paper";
 // }
