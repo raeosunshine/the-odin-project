@@ -11,12 +11,17 @@
 <body>
 	<div id="root">
 		<div id="board">
-			<div id="round-counter">
-				<p><span id="round-count"></span>/<span>5</span></p>
-				<h3>round</h3>
+			<div class="control">
+				<button id="restart">
+					Restart
+				</button>
+				<div id="round-counter">
+					<p><span id="round-count"></span>/<span>5</span></p>
+					<h3>round</h3>
+				</div>
 			</div>
 			<ul id="match">
-				<li>
+				<li id="bot-state">
 					<div class="player">
 						<p class="player-label">SaBot🤖</p>
 						<p id="bot-pick"></p>
@@ -28,7 +33,7 @@
 				<li>
 					<p id="round-state"></p>
 				</li>
-				<li>
+				<li id="user-state">
 					<div class="player">
 						<p class="player-label">You🤠</p>
 						<p id="user-pick"></p>

@@ -53,13 +53,33 @@ body {
 	justify-content: space-between;
 }
 
+.control {
+	display: flex;
+	gap: 16px;
+	justify-content: space-between;
+}
+
+#restart {
+	border: 0;
+	border-radius: 12px;
+	background-color: lightskyblue;
+	cursor: pointer;
+	padding: 8px;
+	width: fit-content;
+	text-align: center;
+	align-self: self-start;
+}
+
+#restart:hover {
+	background-color: lightblue;
+}
+
 #round-counter {
 	background-color: black;
 	color: white;
 	padding: 8px;
 	width: fit-content;
 	text-align: center;
-	align-self: flex-end;
 }
 
 #round-counter h3 {
@@ -121,8 +141,12 @@ body {
 	align-items: center;
 }
 
-#console button:hover {
+#console button:hover:enabled {
 	background-color: hsl(219, 99%, 58%);
+}
+
+#console button:disabled {
+	cursor: not-allowed;
 }
 
 #match {
@@ -172,6 +196,12 @@ body {
 
 #match .score-label > span {
 	font-weight: 700;
+}
+
+#match .winner .player,
+#match .winner .player-label,
+#match .winner .score-label {
+	border-color: springgreen;
 }
 
 #bot-pick,

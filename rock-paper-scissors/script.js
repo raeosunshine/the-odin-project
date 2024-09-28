@@ -1,99 +1,16 @@
-// function isWinning(first, second) {
-// 	return first === "paper" && second === "rock" || first === "rock" && second === "scissors" || first === "scissors" && second === "paper";
-// }
-
-// function capitalize(str) {
-// 	return str.charAt(0).toUpperCase() + str.slice(1);
-// }
-
-// function getWinner(humanScore, computerScore) {
-// 	if(humanScore === computerScore) {
-// 		return alert("It's a draw!");
-// 	}
-
-// 	if(humanScore > computerScore) {
-// 		return alert("Congratulations! You win!");
-// 	}
-
-// 	return alert("Sorry, you lose.")
-// }
-
-// function isValidChoice(choice) {
-// 	return choice === "paper" || choice === "rock" || choice === "scissors";
-// }
-
-
-// function playGame() {
-// 	let humanScore = 0;
-// 	let computerScore = 0;
-// 	let round = 0;
-
-// 	function roundResultAlert(humanChoice, computerChoice, message) {
-// 		alert(`
-// 			Round ${round + 1}
-
-// 			You: ${capitalize(humanChoice || "-")} | Computer: ${capitalize(computerChoice)}
-// 			${message}
-
-// 			You: ${humanScore} | Computer: ${computerScore}
-// 		`);
-// 	}
-
-// 	function playRound(humanChoice, computerChoice) {
-// 		if (isWinning(humanChoice, computerChoice)) {
-// 			humanScore += 1;
-// 			roundResultAlert(
-// 				humanChoice,
-// 				computerChoice,
-// 				`You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}`
-// 			);
-// 		} else if (isWinning(computerChoice, humanChoice) || !isValidChoice(humanChoice)) {
-// 			computerScore += 1;
-// 			roundResultAlert(
-// 				humanChoice,
-// 				computerChoice,
-// 				`You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice || "-")}`
-// 			);
-// 		} else {
-// 			roundResultAlert(humanChoice, computerChoice, "It's a draw!");
-// 		}
-// 	}
-
-// 	// Play the game 5 rounds
-// 	while(round < 5) {
-// 		playRound(getHumanChoice(), getComputerChoice());
-// 		round += 1;
-// 	}
-
-// 	// Announce the winner
-// 	getWinner(humanScore, computerScore);
-// }
-
-// const input = confirm(`
-// 	Welcome to Odin Rock, Paper, and Scissors!
-// 	Let's play 5-round game, shall we?
-// `);
-
-// if(input) {
-// 	playGame();
-// } else {
-// 	alert("That's unfortunate. Hope to play with you some other time!")
-// }
 const rootEl = document.getElementById("#root");
 
-function renderCurrentRound() {
+function renderCurrentRound(round = 0) {
 	const roundCountEl = document.querySelector("#round-count");
-	roundCountEl.textContent = 0;
+	roundCountEl.textContent = round;
 }
 
-function renderUserScore() {
+function renderPlayerScore(userScore = 0, botScore = 0) {
 	const userScoreEl = document.querySelector("#user-score");
-	userScoreEl.textContent = 0;
-}
-
-function renderBotScore() {
 	const botScoreEl = document.querySelector("#bot-score");
-	botScoreEl.textContent = 0;
+
+	userScoreEl.textContent = userScore;
+	botScoreEl.textContent = botScore;
 }
 
 function getEmoji(option) {
@@ -138,22 +55,102 @@ function getBotPick() {
 	return "scissors"; // must be random === 2
 }
 
-function renderPick(player, option) {
-	const playerPickEl = document.querySelector(`#${player}-pick`);
-	playerPickEl.textContent = getEmoji(option);
+function renderPick(userPick, botPick) {
+	const userPickEl = document.querySelector("#user-pick");
+	const botPickEl = document.querySelector("#bot-pick");
+
+	userPickEl.textContent = getEmoji(userPick);
+	botPickEl.textContent = getEmoji(botPick);
 }
 
+function getWinner(userPick, botPick) {
+	if (userPick === botPick) {
+		return "draw";
+	}
+
+	const isUserWinning = userPick === "paper" && botPick === "rock" || userPick === "rock" && botPick === "scissors" || userPick === "scissors" && botPick === "paper";
+
+	return isUserWinning ? "user" : "bot";
+}
+
+function renderRoundState(winner) {
+	const roundStateEl = document.querySelector("#round-state");
+
+	switch (winner) {
+		case "user": {
+			roundStateEl.textContent = "lost to";
+
+			break;
+		}
+		case "bot": {
+			roundStateEl.textContent = "won over";
+
+			break;
+		}
+		case "draw": {
+			roundStateEl.textContent = "=";
+
+			break;
+		}
+		default: {
+			console.error(`Invalid winner: ${winner}`);
+			break;
+		}
+	}
+}
+
+function endGame(winner) {
+	// disabled console
+	const consoleEl = document.querySelector("#console");
+	consoleEl.childNodes.forEach(node => {
+		node.disabled = true;
+	});
+
+	// mark winner
+	const userStateEl = document.querySelector("#user-state");
+	const botStateEl = document.querySelector("#bot-state");
+
+	if (winner === "user") {
+		userStateEl.classList.add("winner");
+	} else if (winner === "bot") {
+		botStateEl.classList.add("winner");
+	}
+}
+
+let round = 0;
+let userScore = 0;
+let botScore = 0;
 function handleGame(userPick) {
 	const botPick = getBotPick();
 
-	renderPick("bot", botPick);
-	renderPick("user", userPick);
+	renderPick(userPick, botPick);
+
+	// update round
+	round += 1;
+	renderCurrentRound(round);
+
+	// check winner and update score
+	const winner = getWinner(userPick, botPick);
+	if (winner === "user") {
+		userScore += 1;
+	} else if (winner === "bot") {
+		botScore += 1;
+	}
+	renderPlayerScore(userScore, botScore);
+	renderRoundState(winner);
+
+
+	// end game if round === 5
+	if (round === 5) {
+		const gameWinner = userScore === botScore ? "draw" : userScore > botScore ? "user" : "bot";
+		endGame(gameWinner);
+	}
 }
 
 function handleConsole() {
 	const consoleEl = document.querySelector("#console");
 
-	consoleEl.addEventListener("click", (e) => {
+	const handleClick = (e) => {
 		const target = e.target;
 
 		switch (target.title) {
@@ -169,18 +166,27 @@ function handleConsole() {
 				break;
 			}
 		}
-	})
+	}
+
+	consoleEl.addEventListener("click", handleClick);
 }
 
 function init() {
 	renderCurrentRound();
-
-	renderBotScore();
-	renderUserScore();
+	renderPlayerScore();
 
 	handleConsole();
 
 	console.log("init ui");
 }
 
+function restartGame() {
+	const restartGameEl = document.querySelector("#restart");
+
+	restartGameEl.addEventListener("click", () => {
+		window.location.reload();
+	});
+}
+
 init();
+restartGame();
