@@ -1,6 +1,47 @@
-// randomly returns computer choice
-// 'rock', 'paper', and 'scissors'
-function getComputerChoice() {
+const rootEl = document.getElementById("#root");
+
+function renderCurrentRound(round = 0) {
+	const roundCountEl = document.querySelector("#round-count");
+	roundCountEl.textContent = round;
+}
+
+function renderPlayerScore(userScore = 0, botScore = 0) {
+	const userScoreEl = document.querySelector("#user-score");
+	const botScoreEl = document.querySelector("#bot-score");
+
+	userScoreEl.textContent = userScore;
+	botScoreEl.textContent = botScore;
+}
+
+function getEmoji(option) {
+	let emoji = "";
+
+	switch (option) {
+		case "rock": {
+			emoji = "✊"
+			break;
+		}
+		case "paper": {
+			emoji = "🖐️"
+			break;
+		}
+		case "scissors": {
+			emoji = "✌️"
+			break;
+		}
+
+		default: {
+			console.error(`Invalid option: ${option}`)
+			break;
+		}
+	}
+
+	return emoji;
+}
+
+// // randomly returns computer choice
+// // 'rock', 'paper', and 'scissors'
+function getBotPick() {
 	const random = Math.floor(Math.random() * 3); // random either 0, 1, 2
 
 	if (random === 0) {
@@ -14,95 +55,138 @@ function getComputerChoice() {
 	return "scissors"; // must be random === 2
 }
 
-function getHumanChoice() {
-	const input = prompt(`
-		Disclaimer: A typo could lead to your defeat. Please enter your choice carefully.
+function renderPick(userPick, botPick) {
+	const userPickEl = document.querySelector("#user-pick");
+	const botPickEl = document.querySelector("#bot-pick");
 
-		REMEMBER: Rock, Paper, or Scissors!
-	`) || ""; // set to empty string if it's null
-	const choice = input.toLowerCase(); // to handle case sensitivity
-
-	return choice;
+	userPickEl.textContent = getEmoji(userPick);
+	botPickEl.textContent = getEmoji(botPick);
 }
 
-function isWinning(first, second) {
-	return first === "paper" && second === "rock" || first === "rock" && second === "scissors" || first === "scissors" && second === "paper";
-}
-
-function capitalize(str) {
-	return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function getWinner(humanScore, computerScore) {
-	if(humanScore === computerScore) {
-		return alert("It's a draw!");
+function getWinner(userPick, botPick) {
+	if (userPick === botPick) {
+		return "draw";
 	}
 
-	if(humanScore > computerScore) {
-		return alert("Congratulations! You win!");
-	}
+	const isUserWinning = userPick === "paper" && botPick === "rock" || userPick === "rock" && botPick === "scissors" || userPick === "scissors" && botPick === "paper";
 
-	return alert("Sorry, you lose.")
+	return isUserWinning ? "user" : "bot";
 }
 
-function isValidChoice(choice) {
-	return choice === "paper" || choice === "rock" || choice === "scissors";
+function renderRoundState(winner) {
+	const roundStateEl = document.querySelector("#round-state");
+
+	switch (winner) {
+		case "user": {
+			roundStateEl.textContent = "lost to";
+
+			break;
+		}
+		case "bot": {
+			roundStateEl.textContent = "won over";
+
+			break;
+		}
+		case "draw": {
+			roundStateEl.textContent = "=";
+
+			break;
+		}
+		default: {
+			console.error(`Invalid winner: ${winner}`);
+			break;
+		}
+	}
 }
 
+function endGame(winner) {
+	// disabled console
+	const consoleEl = document.querySelector("#console");
+	consoleEl.childNodes.forEach(node => {
+		node.disabled = true;
+	});
 
-function playGame() {
-	let humanScore = 0;
-	let computerScore = 0;
-	let round = 0;
+	// mark winner
+	const userStateEl = document.querySelector("#user-state");
+	const botStateEl = document.querySelector("#bot-state");
 
-	function roundResultAlert(humanChoice, computerChoice, message) {
-		alert(`
-			Round ${round + 1}
-
-			You: ${capitalize(humanChoice || "-")} | Computer: ${capitalize(computerChoice)}
-			${message}
-
-			You: ${humanScore} | Computer: ${computerScore}
-		`);
+	if (winner === "user") {
+		userStateEl.classList.add("winner");
+	} else if (winner === "bot") {
+		botStateEl.classList.add("winner");
 	}
+}
 
-	function playRound(humanChoice, computerChoice) {
-		if (isWinning(humanChoice, computerChoice)) {
-			humanScore += 1;
-			roundResultAlert(
-				humanChoice,
-				computerChoice,
-				`You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}`
-			);
-		} else if (isWinning(computerChoice, humanChoice) || !isValidChoice(humanChoice)) {
-			computerScore += 1;
-			roundResultAlert(
-				humanChoice,
-				computerChoice,
-				`You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice || "-")}`
-			);
-		} else {
-			roundResultAlert(humanChoice, computerChoice, "It's a draw!");
+let round = 0;
+let userScore = 0;
+let botScore = 0;
+function handleGame(userPick) {
+	const botPick = getBotPick();
+
+	renderPick(userPick, botPick);
+
+	// update round
+	round += 1;
+	renderCurrentRound(round);
+
+	// check winner and update score
+	const winner = getWinner(userPick, botPick);
+	if (winner === "user") {
+		userScore += 1;
+	} else if (winner === "bot") {
+		botScore += 1;
+	}
+	renderPlayerScore(userScore, botScore);
+	renderRoundState(winner);
+
+
+	// end game if round === 5
+	if (round === 5) {
+		const gameWinner = userScore === botScore ? "draw" : userScore > botScore ? "user" : "bot";
+		endGame(gameWinner);
+	}
+}
+
+function handleConsole() {
+	const consoleEl = document.querySelector("#console");
+
+	const handleClick = (e) => {
+		const target = e.target;
+
+		switch (target.title) {
+			case "rock":
+			case "paper":
+			case "scissors": {
+				handleGame(target.title);
+
+				break;
+			}
+			default: {
+				console.error(`Involid option: ${target}`);
+				break;
+			}
 		}
 	}
 
-	// Play the game 5 rounds
-	while(round < 5) {
-		playRound(getHumanChoice(), getComputerChoice());
-		round += 1;
-	}
-
-	// Announce the winner
-	getWinner(humanScore, computerScore);
+	consoleEl.addEventListener("click", handleClick);
 }
 
-const input = confirm(`
-	Welcome to Odin Rock, Paper, and Scissors!
-	Let's play 5-round game, shall we?
-`);
+function init() {
+	renderCurrentRound();
+	renderPlayerScore();
 
-if(input) {
-	playGame();
-} else {
-	alert("That's unfortunate. Hope to play with you some other time!")
+	handleConsole();
+
+	console.log("init ui");
 }
+
+function restartGame() {
+	const restartGameEl = document.querySelector("#restart");
+
+	restartGameEl.addEventListener("click", () => {
+		window.location.reload();
+	});
+}
+
+init();
+restartGame();
